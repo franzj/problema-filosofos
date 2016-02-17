@@ -1,8 +1,10 @@
 
 package src.filosofos;
 
+import java.util.concurrent.Semaphore;
+
 class Main {
-  public static final String solucion = "serial";
+  public static final String solucion = "varios-turnos";
 
   public static void help(){
     System.out.println("\tSolución '" + solucion + "'\n");
@@ -25,19 +27,19 @@ class Main {
   public static void construir(int nroFilosofos){
     // Generamos los palillos del comedor
     int palillos[][] = generarPalillos(nroFilosofos);
-    // Array de filósofos
-    Filosofo filosofo[] = new Filosofo[nroFilosofos];
+    // Array de objetos semáforo que representan alos palillos
+    Semaphore palillos_semaforo[] = new Semaphore[nroFilosofos];
 
-    // Creamos alos filósofos del comedor con su respectivos palillos
+    // Creamos los semáforos, hay el mismo número de palillos que comenzales
     for (int i = 0; i < nroFilosofos; i++) {
-      filosofo[i] = new Filosofo(i, palillos);
+      // Sólo 1 permiso porque cada palillo-semaforo
+      // puede tenerlo un filósofo a la vez
+      palillos_semaforo[i] = new Semaphore(1);
     }
 
-    // Iniciando la cena
-    while (true) {
-      for (int i = 0; i < nroFilosofos; i++) {
-        filosofo[i].comer();
-      }
+    // Creamos a los filósofos del comedor con su respectivos palillos
+    for (int i = 0; i < nroFilosofos; i++) {
+      new Filosofo(i, palillos_semaforo, palillos).start(); // iniciamos el hilo
     }
   }
 
