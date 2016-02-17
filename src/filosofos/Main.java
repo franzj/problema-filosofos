@@ -4,7 +4,7 @@ package src.filosofos;
 import java.util.concurrent.Semaphore;
 
 class Main {
-  public static final String solucion = "varios-turnos";
+  public static final String solucion = "cola-de-tenedores";
 
   public static void help(){
     System.out.println("\tSolución '" + solucion + "'\n");
